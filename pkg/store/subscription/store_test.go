@@ -6,13 +6,14 @@ package subscription
 
 import (
 	"context"
+	"testing"
+	"time"
+
 	"github.com/atomix/atomix-go-client/pkg/atomix/test"
 	"github.com/atomix/atomix-go-client/pkg/atomix/test/rsm"
 	api "github.com/onosproject/onos-api/go/onos/e2t/e2/v1beta1"
 	"github.com/onosproject/onos-lib-go/pkg/errors"
 	"github.com/stretchr/testify/assert"
-	"testing"
-	"time"
 )
 
 func TestSubscriptionStore(t *testing.T) {
@@ -73,10 +74,28 @@ func TestSubscriptionStore(t *testing.T) {
 	err = store1.Delete(context.TODO(), obj)
 	assert.NoError(t, err)
 
+	objList, err := store1.List(context.TODO())
+	assert.NoError(t, err)
+	assert.Equal(t, 1, len(objList))
+
 	// Verify the object was deleted
 	obj, err = store2.Get(context.TODO(), obj1.ID)
 	assert.Nil(t, obj)
 	assert.True(t, errors.IsNotFound(err))
+
+	obj, err = store2.Get(context.TODO(), obj2.ID)
+	assert.NoError(t, err)
+	assert.NotNil(t, obj)
+	assert.Equal(t, obj2.ID, obj.ID)
+	assert.NotEqual(t, api.Revision(0), obj.Revision)
+
+	err = store1.Delete(context.TODO(), obj)
+	assert.NoError(t, err)
+
+	objList, err = store2.List(context.TODO())
+	assert.NoError(t, err)
+	assert.Equal(t, 0, len(objList))
+
 }
 
 func nextEvent(t *testing.T, ch chan api.SubscriptionEvent) *api.Subscription {

@@ -5,7 +5,6 @@
 package e2
 
 import (
-	"context"
 	"testing"
 
 	"github.com/onosproject/onos-api/go/onos/e2t/e2/v1beta1"
@@ -40,7 +39,7 @@ func (s *TestSuite) TestIdenticalSubscriptionSingleApp(t *testing.T) {
 	sim := utils.CreateRanSimulatorWithNameOrDie(t, s.c, "identical-subscriptions-single-app")
 	assert.NotNil(t, sim)
 
-	ctx, cancel := context.WithTimeout(context.Background(), subscriptionTimeout)
+	ctx, cancel := e2utils.GetCtx()
 	defer cancel()
 
 	nodeID := utils.GetTestNodeID(t)

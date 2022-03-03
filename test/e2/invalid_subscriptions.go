@@ -5,9 +5,7 @@
 package e2
 
 import (
-	"context"
 	"testing"
-	"time"
 
 	"github.com/onosproject/onos-e2t/test/e2utils"
 
@@ -42,7 +40,7 @@ func runTestCase(t *testing.T, testCase invalidSubscriptionTestCase) {
 	}
 	sdkClient := utils.GetE2Client(t, string(testCase.serviceModelName), string(testCase.serviceModelVersion), testCase.encodingType)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := e2utils.GetCtx()
 	defer cancel()
 
 	nodeID := utils.GetTestNodeID(t)

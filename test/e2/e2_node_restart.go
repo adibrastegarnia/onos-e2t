@@ -5,7 +5,6 @@
 package e2
 
 import (
-	"context"
 	"testing"
 	"time"
 
@@ -27,14 +26,14 @@ func (s *TestSuite) TestE2NodeRestart(t *testing.T) {
 	// Create a simulator
 	sim := utils.CreateRanSimulatorWithNameOrDie(t, s.c, "e2node-restart-subscription")
 
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := e2utils.GetCtx()
 	defer cancel()
 
 	topoSdkClient, err := utils.NewTopoClient()
 	assert.NoError(t, err)
 
 	nodeID := utils.GetTestNodeID(t)
-	cells, err := topoSdkClient.GetCells(context.Background(), nodeID)
+	cells, err := topoSdkClient.GetCells(ctx, nodeID)
 	assert.NoError(t, err)
 
 	reportPeriod := uint32(5000)
@@ -123,7 +122,7 @@ func (s *TestSuite) TestE2NodeRestart(t *testing.T) {
 	assert.NoError(t, err)
 
 	t.Log("Unsubscribe")
-	err = node.Unsubscribe(context.Background(), subName)
+	err = node.Unsubscribe(ctx, subName)
 	assert.NoError(t, err)
 
 	e2utils.CheckForEmptySubscriptionList(t)

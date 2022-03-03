@@ -5,7 +5,6 @@
 package e2
 
 import (
-	"context"
 	"strings"
 	"testing"
 	"time"
@@ -27,7 +26,7 @@ import (
 // TestE2TNodeRestart checks that a subscription recovers after an E2T node restart
 func (s *TestSuite) TestE2TNodeRestart(t *testing.T) {
 
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := e2utils.GetCtx()
 	defer cancel()
 
 	topoSdkClient, err := utils.NewTopoClient()

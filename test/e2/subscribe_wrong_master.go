@@ -5,10 +5,10 @@
 package e2
 
 import (
-	"context"
+	"testing"
+
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"testing"
 
 	"github.com/onosproject/onos-e2t/test/e2utils"
 
@@ -28,7 +28,7 @@ func (s *TestSuite) TestSubscribeWrongMaster(t *testing.T) {
 	sim := utils.CreateRanSimulatorWithNameOrDie(t, s.c, "subscription-wrong-master")
 	assert.NotNil(t, sim)
 
-	ctx, cancel := context.WithTimeout(context.Background(), subscriptionTimeout)
+	ctx, cancel := e2utils.GetCtx()
 	defer cancel()
 
 	e2NodeID := utils.GetTestNodeID(t)

@@ -5,11 +5,10 @@
 package e2
 
 import (
-	"context"
 	"testing"
-	"time"
 
 	topoapi "github.com/onosproject/onos-api/go/onos/topo"
+	"github.com/onosproject/onos-e2t/test/e2utils"
 
 	modelapi "github.com/onosproject/onos-api/go/onos/ransim/model"
 	ransimtypes "github.com/onosproject/onos-api/go/onos/ransim/types"
@@ -28,7 +27,7 @@ var (
 )
 
 func (s *TestSuite) TestMultiE2Nodes(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	ctx, cancel := e2utils.GetCtx()
 	defer cancel()
 
 	topoSdkClient, err := utils.NewTopoClient()

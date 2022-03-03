@@ -26,7 +26,7 @@ func (s *TestSuite) TestTopoNodeRestart(t *testing.T) {
 	// Create a simulator
 	sim := utils.CreateRanSimulatorWithNameOrDie(t, s.c, "topo-restart-subscription")
 	assert.NotNil(t, sim)
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := e2utils.GetCtx()
 	defer cancel()
 
 	topoSdkClient, err := utils.NewTopoClient()

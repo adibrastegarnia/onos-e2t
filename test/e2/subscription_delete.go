@@ -84,9 +84,9 @@ func createAndVerifySubscription(ctx context.Context, t *testing.T, nodeID topo.
 	return channelID, ch
 }
 
-func getSubscriptionID(t *testing.T, channelID e2api.ChannelID) e2api.SubscriptionID {
+func getSubscriptionID(t *testing.T, ctx context.Context, channelID e2api.ChannelID) e2api.SubscriptionID {
 	getChannelRequest := &e2api.GetChannelRequest{ChannelID: channelID}
-	channelResponse, err := utils.GetSubAdminClient(t).GetChannel(context.Background(), getChannelRequest)
+	channelResponse, err := utils.GetSubAdminClient(t).GetChannel(ctx, getChannelRequest)
 	assert.NoError(t, err)
 	channel := channelResponse.Channel
 	return channel.GetSubscriptionID()
@@ -99,7 +99,7 @@ func (s *TestSuite) TestSubscriptionDelete(t *testing.T) {
 	sim := utils.CreateRanSimulatorWithNameOrDie(t, s.c, "subscription-delete")
 	assert.NotNil(t, sim)
 
-	ctx, cancel := context.WithTimeout(context.Background(), subscriptionTimeout)
+	ctx, cancel := e2utils.GetCtx()
 	defer cancel()
 	//  Initially the subscription list should be empty
 	e2utils.CheckForEmptySubscriptionList(t)
@@ -111,7 +111,7 @@ func (s *TestSuite) TestSubscriptionDelete(t *testing.T) {
 
 	// Add a subscription
 	channelID, _ := createAndVerifySubscription(ctx, t, nodeID, node)
-	subscriptionID := getSubscriptionID(t, channelID)
+	subscriptionID := getSubscriptionID(t, ctx, channelID)
 
 	// Check that the subscription list is correct
 	subList := e2utils.GetSubscriptionList(t)
@@ -130,7 +130,7 @@ func (s *TestSuite) TestSubscriptionDelete(t *testing.T) {
 
 	//  Open the subscription again and make sure it is open
 	channelID, ch := createAndVerifySubscription(ctx, t, nodeID, node)
-	subscriptionID = getSubscriptionID(t, channelID)
+	subscriptionID = getSubscriptionID(t, ctx, channelID)
 
 	// Check that the number of subscriptions is correct after reopening
 	subList = e2utils.GetSubscriptionList(t)

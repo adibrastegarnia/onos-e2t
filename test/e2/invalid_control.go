@@ -5,8 +5,9 @@
 package e2
 
 import (
-	"context"
 	"testing"
+
+	"github.com/onosproject/onos-e2t/test/e2utils"
 
 	sdkclient "github.com/onosproject/onos-ric-sdk-go/pkg/e2/v1beta1"
 
@@ -28,7 +29,8 @@ type invalidControlTestCase struct {
 }
 
 func runControlTestCase(t *testing.T, testCase invalidControlTestCase, testNodeID string) {
-	ctx := context.Background()
+	ctx, cancel := e2utils.GetCtx()
+	defer cancel()
 	if !testCase.enabled {
 		t.Skip()
 		return

@@ -90,5 +90,5 @@ func CheckForEmptySubscriptionList(t *testing.T) {
 
 // GetCtx returns a context to use in gRPC calls
 func GetCtx() (context.Context, context.CancelFunc) {
-	return context.WithTimeout(context.Background(), 2*time.Minute)
+	return context.WithTimeout(context.Background(), 3*time.Minute)
 }

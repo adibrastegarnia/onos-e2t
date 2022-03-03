@@ -5,7 +5,6 @@
 package e2
 
 import (
-	"context"
 	"testing"
 
 	"github.com/onosproject/onos-e2t/test/e2utils"
@@ -26,7 +25,7 @@ func (s *TestSuite) TestSubscriptionMultipleReports(t *testing.T) {
 	sim := utils.CreateRanSimulatorWithNameOrDie(t, s.c, "subscription-multiple-reports")
 	assert.NotNil(t, sim)
 
-	ctx, cancel := context.WithTimeout(context.Background(), subscriptionTimeout)
+	ctx, cancel := e2utils.GetCtx()
 	defer cancel()
 
 	nodeID := utils.GetTestNodeID(t)

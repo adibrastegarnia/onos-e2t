@@ -5,7 +5,6 @@
 package e2
 
 import (
-	"context"
 	"math/rand"
 	"testing"
 	"time"
@@ -34,7 +33,7 @@ func (s *TestSuite) TestSubscriptionOnChange(t *testing.T) {
 	sim := utils.CreateRanSimulatorWithNameOrDie(t, s.c, "subscription-on-change")
 	assert.NotNil(t, sim)
 
-	ctx, cancel := context.WithTimeout(context.Background(), subscriptionTimeout)
+	ctx, cancel := e2utils.GetCtx()
 	defer cancel()
 	topoSdkClient, err := utils.NewTopoClient()
 	assert.NoError(t, err)

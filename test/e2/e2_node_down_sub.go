@@ -5,7 +5,6 @@
 package e2
 
 import (
-	"context"
 	"testing"
 	"time"
 
@@ -29,7 +28,7 @@ func (s *TestSuite) TestE2NodeDownSubscription(t *testing.T) {
 
 	eventTriggerBytes, err := utils.CreateKpmV2EventTrigger(5000)
 	assert.NoError(t, err)
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := e2utils.GetCtx()
 	defer cancel()
 
 	topoSdkClient, err := utils.NewTopoClient()
@@ -75,7 +74,7 @@ func (s *TestSuite) TestE2NodeDownSubscription(t *testing.T) {
 	utils.UninstallRanSimulatorOrDie(t, sim)
 
 	for {
-		pods, err := kube.CoreV1().Pods().List(context.Background())
+		pods, err := kube.CoreV1().Pods().List(ctx)
 		assert.NoError(t, err)
 		if len(pods) > 0 {
 			time.Sleep(time.Second)
@@ -99,7 +98,7 @@ func (s *TestSuite) TestE2NodeDownSubscription(t *testing.T) {
 	// Delete the subscription and ran simulator
 	sim = utils.CreateRanSimulatorWithNameOrDie(t, s.c, "e2node-down-subscription")
 	node = sdkClient.Node(sdkclient.NodeID(nodeID))
-	err = node.Unsubscribe(context.Background(), subName)
+	err = node.Unsubscribe(ctx, subName)
 	assert.NoError(t, err)
 
 	e2utils.CheckForEmptySubscriptionList(t)

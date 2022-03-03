@@ -118,6 +118,7 @@ func (c *Client) GetCells(ctx context.Context, nodeID topoapi.ID) ([]*topoapi.E2
 			SrcId:        string(nodeID),
 			RelationKind: topoapi.CONTAINS,
 			TargetKind:   topoapi.E2CELL,
+			Scope:        topoapi.RelationFilterScope_RELATIONS_ONLY,
 		},
 	}
 

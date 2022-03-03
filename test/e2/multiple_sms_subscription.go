@@ -5,9 +5,6 @@
 package e2
 
 import (
-	"context"
-	"time"
-
 	e2smkpmies "github.com/onosproject/onos-e2-sm/servicemodels/e2sm_kpm_v2_go/v2/e2sm-kpm-v2-go"
 	e2smrcpreies "github.com/onosproject/onos-e2-sm/servicemodels/e2sm_rc_pre_go/v2/e2sm-rc-pre-v2-go"
 	"github.com/onosproject/onos-e2t/test/e2utils"
@@ -29,7 +26,7 @@ func (s *TestSuite) TestMultiSmSubscription(t *testing.T) {
 
 	nodeIDs := utils.GetTestNodeIDs(t, 2)
 	assert.True(t, len(nodeIDs) > 0)
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	ctx, cancel := e2utils.GetCtx()
 	defer cancel()
 
 	topoSdkClient, err := utils.NewTopoClient()
@@ -81,7 +78,7 @@ func (s *TestSuite) TestMultiSmSubscription(t *testing.T) {
 	KPMSdkClient := utils.GetE2Client(t, utils.KpmServiceModelName, utils.Version2, sdkclient.ProtoEncoding)
 	KPMNode := KPMSdkClient.Node(sdkclient.NodeID(kpmNodeID))
 	KPMch := make(chan e2api.Indication)
-	KPMCtx, KPMCancel := context.WithTimeout(context.Background(), 30*time.Second)
+	KPMCtx, KPMCancel := e2utils.GetCtx()
 	_, err = KPMNode.Subscribe(KPMCtx, KPMSubName, KPMSubSpec, KPMch)
 	assert.NoError(t, err)
 
@@ -115,7 +112,7 @@ func (s *TestSuite) TestMultiSmSubscription(t *testing.T) {
 	RCSdkClient := utils.GetE2Client(t, utils.RcServiceModelName, utils.Version2, sdkclient.ProtoEncoding)
 	RCNode := RCSdkClient.Node(sdkclient.NodeID(rcPreNodeID))
 	assert.NotNil(t, RCNode)
-	RCCtx, RCCancel := context.WithTimeout(context.Background(), 30*time.Second)
+	RCCtx, RCCancel := e2utils.GetCtx()
 	_, err = RCNode.Subscribe(RCCtx, RCSubName, RCSubReq, RCch)
 	assert.NoError(t, err)
 
@@ -133,10 +130,10 @@ func (s *TestSuite) TestMultiSmSubscription(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Clean up subscriptions
-	err = KPMNode.Unsubscribe(context.Background(), KPMSubName)
+	err = KPMNode.Unsubscribe(ctx, KPMSubName)
 	assert.NoError(t, err)
 
-	err = RCNode.Unsubscribe(context.Background(), RCSubName)
+	err = RCNode.Unsubscribe(ctx, RCSubName)
 	assert.NoError(t, err)
 
 	KPMCancel()

@@ -5,7 +5,6 @@
 package e2
 
 import (
-	"context"
 	"testing"
 
 	e2api "github.com/onosproject/onos-api/go/onos/e2t/e2/v1beta1"
@@ -34,7 +33,8 @@ func (s *TestSuite) TestControl(t *testing.T) {
 	sim := utils.CreateRanSimulatorWithNameOrDie(t, s.c, "control-oran-e2sm-rc-pre-v2")
 	assert.NotNil(t, sim)
 	ch := make(chan e2api.Indication)
-	ctx := context.Background()
+	ctx, cancel := e2utils.GetCtx()
+	defer cancel()
 
 	// Get a test e2 node ID
 	testNodeID := utils.GetTestNodeID(t)

@@ -5,9 +5,7 @@
 package e2
 
 import (
-	"context"
 	"testing"
-	"time"
 
 	"github.com/onosproject/onos-api/go/onos/e2t/e2/v1beta1"
 	"github.com/onosproject/onos-e2t/test/e2utils"
@@ -36,23 +34,23 @@ func (s *TestSuite) TestSubscriptionCancel(t *testing.T) {
 
 	for i := 1; i <= iterations; i++ {
 		// Create the subscription
-		subCtx, subCancel := context.WithTimeout(context.Background(), 15*time.Second)
+		ctx, cancel := e2utils.GetCtx()
 		ch := make(chan v1beta1.Indication)
-		_, err = node.Subscribe(subCtx, subName, subSpec, ch)
+		_, err = node.Subscribe(ctx, subName, subSpec, ch)
 		assert.NoError(t, err)
 
 		// Check that there is a message available
 		_ = e2utils.CheckIndicationMessage(t, e2utils.DefaultIndicationTimeout, ch)
 
 		// Cancel the subscription
-		subCancel()
+		cancel()
 		_ = utils.ReadToEndOfChannel(ch)
 	}
 
-	unsubCtx, unsubCancel := context.WithTimeout(context.Background(), 15*time.Second)
-	err = node.Unsubscribe(unsubCtx, subName)
+	ctx, cancel := e2utils.GetCtx()
+	err = node.Unsubscribe(ctx, subName)
 	assert.NoError(t, err)
-	unsubCancel()
+	cancel()
 
 	e2utils.CheckForEmptySubscriptionList(t)
 	utils.UninstallRanSimulatorOrDie(t, sim)
