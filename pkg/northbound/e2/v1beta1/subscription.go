@@ -276,7 +276,9 @@ func (s *SubscriptionServer) Subscribe(request *e2api.SubscribeRequest, server e
 				}
 			}
 		} else if errors.IsNotFound(err) {
+			log.Warn(err)
 			// Create the channel if necessary
+
 			now := time.Now()
 			channel := &e2api.Channel{
 				ID:          channelID,
@@ -292,6 +294,7 @@ func (s *SubscriptionServer) Subscribe(request *e2api.SubscribeRequest, server e
 				},
 			}
 
+			log.Infof("Creating channel %+v", channel)
 			if err := s.chans.Create(server.Context(), channel); err != nil {
 				if !errors.IsAlreadyExists(err) {
 					return backoff.Permanent(err)
